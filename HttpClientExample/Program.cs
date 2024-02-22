@@ -36,9 +36,11 @@ using (HttpClient client = new HttpClient())
 
         foreach (var post in posts)
         {
-            Console.WriteLine(post["id"]);
+            //Console.WriteLine(post["id"]);
+
+            Console.WriteLine(post);
         }
-        
+
         //Console.WriteLine(posts);
     }
     else
@@ -79,7 +81,7 @@ using (HttpClient client = new HttpClient())
      */
     HttpResponseMessage responsePost = client.PostAsync(urlPost, httpContent).Result;
 
-    if(responsePost.IsSuccessStatusCode)
+    if (responsePost.IsSuccessStatusCode)
     {
         /*
          * Aquí se está leyendo el contenido de la respuesta HTTP. 
@@ -98,6 +100,34 @@ using (HttpClient client = new HttpClient())
     else
     {
         Console.WriteLine("Error: " + response.StatusCode);
+    }
+
+
+    //Put
+
+    string urlPut = "https://jsonplaceholder.typicode.com/posts/1";
+
+    client.DefaultRequestHeaders.Clear();
+
+    string parametersPut = "{'id': 1, 'title': 'Manuel', 'body': 'Algo para Manuel', 'userId': 1}";
+
+    JObject jsonStringPut = JObject.Parse(parametersPut);
+
+    var httpContentPut = new StringContent(jsonStringPut.ToString(), Encoding.UTF8, "application/json");
+
+    HttpResponseMessage responsePut = client.PutAsync(urlPut, httpContentPut).Result;
+
+    if(responsePut.IsSuccessStatusCode)
+    {
+        string res3 = responsePut.Content.ReadAsStringAsync().Result;
+
+        JObject resPut = JObject.Parse(res3);
+
+        Console.WriteLine(resPut);
+    }
+    else
+    {
+        Console.WriteLine("Error: " + responsePut.StatusCode);
     }
 
 }
